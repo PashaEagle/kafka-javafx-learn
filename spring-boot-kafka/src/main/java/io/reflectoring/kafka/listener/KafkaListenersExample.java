@@ -9,6 +9,9 @@ import org.springframework.kafka.annotation.PartitionOffset;
 import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -17,7 +20,7 @@ public class KafkaListenersExample {
     private final Logger LOG = LoggerFactory.getLogger(KafkaListenersExample.class);
 
     @Autowired
-    private Map<String, Message> userToMessagesMap;
+    private Map<String, Map<String, List<Message>>> userToRecipientToMessagesMap;
 
     //	@KafkaListener(topics = "reflectoring-1")
 //    @KafkaListener(id = "thing2")
@@ -56,7 +59,22 @@ public class KafkaListenersExample {
             })
     void listenerWithMessageConverter(Message message) {
         LOG.info("MessageObjectListener [{}]", message);
-        userToMessagesMap.put(message.getFrom(), message);
-        LOG.info(userToMessagesMap.toString());
+        Map<String, List<Message>> recipientToMessagesMap = userToRecipientToMessagesMap.get(message.getFrom());
+        if (recipientToMessagesMap == null) {
+            recipientToMessagesMap = new HashMap<>();
+            recipientToMessagesMap.put(message.getTo(), List.of(message));
+        } else {
+            List<Message> recipientMessages = recipientToMessagesMap.get(message.getTo());
+            if (recipientMessages == null) {
+                recipientMessages = List.of(message);
+            } else {
+                recipientMessages = new ArrayList<>(recipientMessages);
+                recipientMessages.add(message);
+            }
+            recipientToMessagesMap.put(message.getTo(), recipientMessages);
+        }
+        userToRecipientToMessagesMap.put(message.getFrom(), recipientToMessagesMap);
+        LOG.info(userToRecipientToMessagesMap.toString());
+        LOG.info("Successfully added new message");
     }
 }

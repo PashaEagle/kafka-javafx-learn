@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -26,8 +27,8 @@ public class UserController {
         return service.sendMessage(message);
     }
 
-    @GetMapping("/messages")
-    List<Message> getUserMessages() {
-        return null;
+    @GetMapping("/messages/{from}")
+    Map<String, List<Message>> getUserMessages(@PathVariable String from) {
+        return service.getAllUserMessages(from);
     }
 }
