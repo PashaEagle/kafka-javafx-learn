@@ -1,8 +1,10 @@
 package io.reflectoring.kafka;
 
 import io.reflectoring.kafka.dto.Message;
+import io.reflectoring.kafka.dto.SendMessageRequest;
 import io.reflectoring.kafka.sender.KafkaSenderExample;
 import io.reflectoring.kafka.sender.KafkaSenderWithMessageConverter;
+import org.apache.kafka.common.network.Send;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,9 @@ public class MainService {
     @Autowired
     private Map<String, Map<String, List<Message>>> userToRecipientToMessagesMap;
 
-    public Message sendMessage(Message message) {
+    public Message sendMessage(SendMessageRequest sendMessageRequest) {
+        Message message = Message.fromRequest(sendMessageRequest);
+        message.setTimestamp(System.currentTimeMillis());
         kafkaSenderExample.sendCustomMessage(message, topic1);
         return message;
     }

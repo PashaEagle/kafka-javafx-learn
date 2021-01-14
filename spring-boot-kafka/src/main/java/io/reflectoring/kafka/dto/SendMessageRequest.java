@@ -1,22 +1,18 @@
 package io.reflectoring.kafka.dto;
 
-import org.apache.kafka.common.network.Send;
-
-public class Message {
+public class SendMessageRequest {
 
     private String from;
     private String to;
     private String text;
-    private long timestamp;
 
-    public Message() {
+    public SendMessageRequest() {
     }
 
-    public Message(String from, String to, String text, long timestamp) {
+    public SendMessageRequest(String from, String to, String text) {
         this.from = from;
         this.to = to;
         this.text = text;
-        this.timestamp = timestamp;
     }
 
     public String getFrom() {
@@ -43,25 +39,12 @@ public class Message {
         this.text = text;
     }
 
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public static Message fromRequest(SendMessageRequest sendMessageRequest) {
-        return new Message(sendMessageRequest.getFrom(), sendMessageRequest.getTo(), sendMessageRequest.getText(), 0);
-    }
-
     @Override
     public String toString() {
         return "Message{" +
                 "from='" + from + '\'' +
                 ", to='" + to + '\'' +
                 ", text='" + text + '\'' +
-                ", timestamp=" + timestamp +
                 '}';
     }
 }

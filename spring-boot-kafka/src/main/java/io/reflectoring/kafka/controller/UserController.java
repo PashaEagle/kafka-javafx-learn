@@ -1,6 +1,7 @@
 package io.reflectoring.kafka.controller;
 
 import io.reflectoring.kafka.MainService;
+import io.reflectoring.kafka.dto.SendMessageRequest;
 import io.reflectoring.kafka.sender.KafkaSenderExample;
 import io.reflectoring.kafka.sender.KafkaSenderWithMessageConverter;
 import io.reflectoring.kafka.dto.Message;
@@ -23,8 +24,8 @@ public class UserController {
     private MainService service;
 
     @PostMapping("/send")
-    Message sendMessage(@RequestBody Message message) {
-        return service.sendMessage(message);
+    Message sendMessage(@RequestBody SendMessageRequest sendMessageRequest) {
+        return service.sendMessage(sendMessageRequest);
     }
 
     @GetMapping("/messages/{from}")

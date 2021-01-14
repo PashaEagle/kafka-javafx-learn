@@ -1,6 +1,7 @@
 package io.reflectoring.kafka.listener;
 
 import io.reflectoring.kafka.dto.Message;
+import io.reflectoring.kafka.dto.SendMessageRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
