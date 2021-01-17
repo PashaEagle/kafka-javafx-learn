@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,8 @@ public class MainService {
     private KafkaSenderWithMessageConverter messageConverterSender;
     @Autowired
     private Map<ChatId, List<Message>> chatIdToMessagesMap;
+    @Autowired
+    private Map<String, List<String>> usernameToChattersMap;
 
     public Message sendMessage(SendMessageRequest sendMessageRequest) {
         Message message = Message.fromRequest(sendMessageRequest);
@@ -33,7 +36,14 @@ public class MainService {
         return message;
     }
 
-    public Map<String, List<Message>> getAllUserMessages(String from) {
-        return null;//chatIdToMessagesMap.get(from);
+    public Map<String, List<Message>> getAllUserMessages(String username) {
+        List<String> chatters = usernameToChattersMap.get(username);
+        Map<String, List<Message>> chatterToMessagesMap = new HashMap<>();
+        chatters.forEach(chatter -> {
+            ChatId tempChat = new ChatId(username, chatter);
+            List<Message> messagesWithChatter = chatIdToMessagesMap.get(tempChat);
+            chatterToMessagesMap.put(chatter, messagesWithChatter);
+        });
+        return chatterToMessagesMap;
     }
 }
