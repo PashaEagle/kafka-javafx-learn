@@ -28,8 +28,8 @@ public class UserController {
         return service.sendMessage(sendMessageRequest);
     }
 
-    @GetMapping("/messages/{from}")
-    Map<String, List<Message>> getUserMessages(@PathVariable String from) {
-        return service.getAllUserMessages(from);
+    @GetMapping("/messages/{username}")
+    Map<String, List<Message>> getUserMessages(@PathVariable String username) {
+        return service.getAllUserMessages(username);
     }
 }

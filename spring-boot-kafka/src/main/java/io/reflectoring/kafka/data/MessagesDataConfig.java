@@ -1,5 +1,6 @@
 package io.reflectoring.kafka.data;
 
+import io.reflectoring.kafka.dto.ChatId;
 import io.reflectoring.kafka.dto.Message;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +13,12 @@ import java.util.Map;
 public class MessagesDataConfig {
 
     @Bean
-    public Map<String, Map<String, List<Message>>> userToRecipientToMessagesMap() {
+    public Map<ChatId, List<Message>> chatIdToMessagesMap() {
+        return new HashMap<>();
+    }
+
+    @Bean
+    public Map<String, List<String>> usernameToChattersMap() {
         return new HashMap<>();
     }
 }

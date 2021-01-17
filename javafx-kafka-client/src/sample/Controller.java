@@ -16,8 +16,12 @@ import java.util.ResourceBundle;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class Controller {
 
@@ -54,6 +58,16 @@ public class Controller {
                 ObjectMapper mapper = new ObjectMapper();
                 Map<String, List<Message>> map = mapper.readValue(response.body(), new TypeReference<Map<String, List<Message>>>(){});
                 System.out.println(map);
+                loginButton.getScene().getWindow().hide();
+
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("/sample/app.fxml"));
+                loader.load();
+
+                Parent root = loader.getRoot();
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.showAndWait();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {

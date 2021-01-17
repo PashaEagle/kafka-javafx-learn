@@ -1,5 +1,6 @@
 package io.reflectoring.kafka;
 
+import io.reflectoring.kafka.dto.ChatId;
 import io.reflectoring.kafka.dto.Message;
 import io.reflectoring.kafka.dto.SendMessageRequest;
 import io.reflectoring.kafka.sender.KafkaSenderExample;
@@ -23,7 +24,7 @@ public class MainService {
     @Autowired
     private KafkaSenderWithMessageConverter messageConverterSender;
     @Autowired
-    private Map<String, Map<String, List<Message>>> userToRecipientToMessagesMap;
+    private Map<ChatId, List<Message>> chatIdToMessagesMap;
 
     public Message sendMessage(SendMessageRequest sendMessageRequest) {
         Message message = Message.fromRequest(sendMessageRequest);
@@ -33,6 +34,6 @@ public class MainService {
     }
 
     public Map<String, List<Message>> getAllUserMessages(String from) {
-        return userToRecipientToMessagesMap.get(from);
+        return null;//chatIdToMessagesMap.get(from);
     }
 }

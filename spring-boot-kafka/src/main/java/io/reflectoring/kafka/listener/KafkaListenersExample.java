@@ -1,5 +1,6 @@
 package io.reflectoring.kafka.listener;
 
+import io.reflectoring.kafka.dto.ChatId;
 import io.reflectoring.kafka.dto.Message;
 import io.reflectoring.kafka.dto.SendMessageRequest;
 import org.slf4j.Logger;
@@ -21,7 +22,10 @@ public class KafkaListenersExample {
     private final Logger LOG = LoggerFactory.getLogger(KafkaListenersExample.class);
 
     @Autowired
-    private Map<String, Map<String, List<Message>>> userToRecipientToMessagesMap;
+    private Map<ChatId, List<Message>> chatIdToMessagesMap;
+
+    @Autowired
+    private Map<String, List<String>> usernameToChattersMap;
 
     //	@KafkaListener(topics = "reflectoring-1")
 //    @KafkaListener(id = "thing2")
@@ -60,22 +64,31 @@ public class KafkaListenersExample {
             })
     void listenerWithMessageConverter(Message message) {
         LOG.info("MessageObjectListener [{}]", message);
-        Map<String, List<Message>> recipientToMessagesMap = userToRecipientToMessagesMap.get(message.getFrom());
-        if (recipientToMessagesMap == null) {
-            recipientToMessagesMap = new HashMap<>();
-            recipientToMessagesMap.put(message.getTo(), List.of(message));
-        } else {
-            List<Message> recipientMessages = recipientToMessagesMap.get(message.getTo());
-            if (recipientMessages == null) {
-                recipientMessages = List.of(message);
-            } else {
-                recipientMessages = new ArrayList<>(recipientMessages);
-                recipientMessages.add(message);
-            }
-            recipientToMessagesMap.put(message.getTo(), recipientMessages);
+        ChatId chatId = new ChatId(message.getFrom(), message.getTo());
+        List<Message> messages = chatIdToMessagesMap.get(chatId);
+        if (messages == null) {
+            messages = new ArrayList<>();
         }
-        userToRecipientToMessagesMap.put(message.getFrom(), recipientToMessagesMap);
-        LOG.info(userToRecipientToMessagesMap.toString());
+        messages.add(message);
+        chatIdToMessagesMap.put(chatId, messages);
+        LOG.info(chatIdToMessagesMap.toString());
+        createNewChatIfNotPresent(message.getFrom(), message.getTo());
         LOG.info("Successfully added new message");
+    }
+
+    void createNewChatIfNotPresent(String username1, String username2) {
+        usernameToChattersMap.computeIfAbsent(username1, k -> new ArrayList<>());
+        usernameToChattersMap.computeIfAbsent(username2, k -> new ArrayList<>());
+
+        if (!usernameToChattersMap.get(username1).contains(username2)) {
+            List<String> chatters = usernameToChattersMap.get(username1);
+            chatters.add(username2);
+            usernameToChattersMap.put(username1, chatters);
+        }
+        if (!usernameToChattersMap.get(username2).contains(username1)) {
+            List<String> chatters = usernameToChattersMap.get(username2);
+            chatters.add(username1);
+            usernameToChattersMap.put(username2, chatters);
+        }
     }
 }
