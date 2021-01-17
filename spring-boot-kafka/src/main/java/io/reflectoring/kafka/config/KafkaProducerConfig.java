@@ -31,72 +31,72 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 @Configuration
 public class KafkaProducerConfig {
 
-	private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-	@Value("${io.reflectoring.kafka.bootstrap-servers}")
-	private String bootstrapServers;
+    @Value("${io.reflectoring.kafka.bootstrap-servers}")
+    private String bootstrapServers;
 
-	@Bean
-	Map<String, Object> producerConfigs() {
-		Map<String, Object> props = new HashMap<>();
-		props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-		props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-		props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-		return props;
-	}
+    @Bean
+    Map<String, Object> producerConfigs() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        return props;
+    }
 
-	@Bean
-	ProducerFactory<String, String> producerFactory() {
-		return new DefaultKafkaProducerFactory<>(producerConfigs());
-	}
+    @Bean
+    ProducerFactory<String, String> producerFactory() {
+        return new DefaultKafkaProducerFactory<>(producerConfigs());
+    }
 
-	@Bean
-	KafkaTemplate<String, String> kafkaTemplate() {
-		KafkaTemplate<String, String> kafkaTemplate = new KafkaTemplate<>(producerFactory());
-		kafkaTemplate.setMessageConverter(new StringJsonMessageConverter());
-		kafkaTemplate.setDefaultTopic("reflectoring-user");
-		kafkaTemplate.setProducerListener(new ProducerListener<String, String>() {
-			@Override
-			public void onSuccess(ProducerRecord<String, String> producerRecord, RecordMetadata recordMetadata) {
-				LOG.info("ACK from ProducerListener message: {} offset:  {}", producerRecord.value(),
-						recordMetadata.offset());
-			}
-		});
-		return kafkaTemplate;
-	}
+    @Bean
+    KafkaTemplate<String, String> kafkaTemplate() {
+        KafkaTemplate<String, String> kafkaTemplate = new KafkaTemplate<>(producerFactory());
+        kafkaTemplate.setMessageConverter(new StringJsonMessageConverter());
+        kafkaTemplate.setDefaultTopic("reflectoring-user");
+        kafkaTemplate.setProducerListener(new ProducerListener<String, String>() {
+            @Override
+            public void onSuccess(ProducerRecord<String, String> producerRecord, RecordMetadata recordMetadata) {
+                LOG.info("ACK from ProducerListener message: {} offset:  {}", producerRecord.value(),
+                        recordMetadata.offset());
+            }
+        });
+        return kafkaTemplate;
+    }
 
-	@Bean
-	public RoutingKafkaTemplate routingTemplate(GenericApplicationContext context) {
+    @Bean
+    public RoutingKafkaTemplate routingTemplate(GenericApplicationContext context) {
 
-		// ProducerFactory with Bytes serializer
-		Map<String, Object> props = new HashMap<>();
-		props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-		props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-		props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
-		DefaultKafkaProducerFactory<Object, Object> bytesPF = new DefaultKafkaProducerFactory<>(props);
-		context.registerBean(DefaultKafkaProducerFactory.class, "bytesPF", bytesPF);
+        // ProducerFactory with Bytes serializer
+        Map<String, Object> props = new HashMap<>();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
+        DefaultKafkaProducerFactory<Object, Object> bytesPF = new DefaultKafkaProducerFactory<>(props);
+        context.registerBean(DefaultKafkaProducerFactory.class, "bytesPF", bytesPF);
 
-		// ProducerFactory with String serializer
-		props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-		DefaultKafkaProducerFactory<Object, Object> stringPF = new DefaultKafkaProducerFactory<>(props);
+        // ProducerFactory with String serializer
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        DefaultKafkaProducerFactory<Object, Object> stringPF = new DefaultKafkaProducerFactory<>(props);
 
-		Map<Pattern, ProducerFactory<Object, Object>> map = new LinkedHashMap<>();
-		map.put(Pattern.compile(".*-bytes"), bytesPF);
-		map.put(Pattern.compile("reflectoring-.*"), stringPF);
-		return new RoutingKafkaTemplate(map);
-	}
+        Map<Pattern, ProducerFactory<Object, Object>> map = new LinkedHashMap<>();
+        map.put(Pattern.compile(".*-bytes"), bytesPF);
+        map.put(Pattern.compile("reflectoring-.*"), stringPF);
+        return new RoutingKafkaTemplate(map);
+    }
 
-	@Bean
-	public ProducerFactory<String, Message> userProducerFactory() {
-		Map<String, Object> configProps = new HashMap<>();
-		configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-		configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-		configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-		return new DefaultKafkaProducerFactory<>(configProps);
-	}
+    @Bean
+    public ProducerFactory<String, Message> userProducerFactory() {
+        Map<String, Object> configProps = new HashMap<>();
+        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        return new DefaultKafkaProducerFactory<>(configProps);
+    }
 
-	@Bean
-	public KafkaTemplate<String, Message> userKafkaTemplate() {
-		return new KafkaTemplate<>(userProducerFactory());
-	}
+    @Bean
+    public KafkaTemplate<String, Message> userKafkaTemplate() {
+        return new KafkaTemplate<>(userProducerFactory());
+    }
 }

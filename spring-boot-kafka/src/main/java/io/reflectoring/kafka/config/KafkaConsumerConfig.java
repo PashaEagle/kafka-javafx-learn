@@ -22,9 +22,9 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 @Configuration
 public class KafkaConsumerConfig {
 
-	@Autowired
-	private KafkaTemplate<String, String> kafkatemplate;
-	
+    @Autowired
+    private KafkaTemplate<String, String> kafkatemplate;
+
     @Value("${io.reflectoring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
@@ -50,7 +50,7 @@ public class KafkaConsumerConfig {
         factory.setRecordFilterStrategy(record -> record.value().contains("ignored"));
         return factory;
     }
-    
+
     public ConsumerFactory<String, Message> userConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -64,13 +64,13 @@ public class KafkaConsumerConfig {
         factory.setConsumerFactory(userConsumerFactory());
         return factory;
     }
-    
+
     @Bean
-	public ConcurrentKafkaListenerContainerFactory<String, String> kafkaJsonListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, String> factory =
-				new ConcurrentKafkaListenerContainerFactory<>();
-		factory.setConsumerFactory(consumerFactory());
-		factory.setMessageConverter(new StringJsonMessageConverter());
-		return factory;
-	}
+    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaJsonListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, String> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory());
+        factory.setMessageConverter(new StringJsonMessageConverter());
+        return factory;
+    }
 }

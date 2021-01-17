@@ -12,34 +12,34 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class InitSend {
-	
-	private final Logger LOG = LoggerFactory.getLogger(getClass());
-	
-	@Autowired
-	private KafkaSenderExample kafkaSenderExample;
-	
-	@Autowired
-	private KafkaSenderWithMessageConverter messageConverterSender;
-	
-	@Value("${io.reflectoring.kafka.topic-1}")
-	private String topic1;
 
-	@Value("${io.reflectoring.kafka.topic-2}")
-	private String topic2;
-	
-	@Value("${io.reflectoring.kafka.topic-3}")
-	private String topic3;
-	
-	@EventListener
-	void initiateSendingMessage(ApplicationReadyEvent event) throws InterruptedException {
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private KafkaSenderExample kafkaSenderExample;
+
+    @Autowired
+    private KafkaSenderWithMessageConverter messageConverterSender;
+
+    @Value("${io.reflectoring.kafka.topic-1}")
+    private String topic1;
+
+    @Value("${io.reflectoring.kafka.topic-2}")
+    private String topic2;
+
+    @Value("${io.reflectoring.kafka.topic-3}")
+    private String topic3;
+
+    @EventListener
+    void initiateSendingMessage(ApplicationReadyEvent event) throws InterruptedException {
 //		Thread.sleep(5000);
 //		LOG.info("---------------------------------");
 //		kafkaSenderExample.sendMessage("some message to tessssst", topic1);
-		
+
 //		Thread.sleep(5000);
 //		LOG.info("---------------------------------");
 //		kafkaSenderExample.sendMessage("I'll be received by ListenToPartitionWithOffset", topic3);
-		
+
 //		Thread.sleep(5000);
 //		LOG.info("---------------------------------");
 //		kafkaSenderExample.sendMessageWithCallback("I'll get a asyc Callback", "reflectoring-others");
@@ -64,5 +64,5 @@ public class InitSend {
 //		Thread.sleep(5000);
 //		LOG.info("---------------------------------");
 //		messageConverterSender.sendMessageWithConverter(new GenericMessage<>(new User("Pikachu")));
-	}
+    }
 }

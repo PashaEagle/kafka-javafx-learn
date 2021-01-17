@@ -11,40 +11,40 @@ import org.springframework.stereotype.Component;
 @Component
 public class KafkaSenderExample {
 
-	private final Logger LOG = LoggerFactory.getLogger(KafkaSenderExample.class);
+    private final Logger LOG = LoggerFactory.getLogger(KafkaSenderExample.class);
 
-	private KafkaTemplate<String, String> kafkaTemplate;
-	private RoutingKafkaTemplate routingKafkaTemplate;
-	private KafkaTemplate<String, Message> userKafkaTemplate;
+    private KafkaTemplate<String, String> kafkaTemplate;
+    private RoutingKafkaTemplate routingKafkaTemplate;
+    private KafkaTemplate<String, Message> userKafkaTemplate;
 
-	@Autowired
-	KafkaSenderExample(KafkaTemplate<String, String> kafkaTemplate, RoutingKafkaTemplate routingKafkaTemplate,
-			KafkaTemplate<String, Message> userKafkaTemplate) {
-		this.kafkaTemplate = kafkaTemplate;
-		this.routingKafkaTemplate = routingKafkaTemplate;
-		this.userKafkaTemplate = userKafkaTemplate;
-	}
+    @Autowired
+    KafkaSenderExample(KafkaTemplate<String, String> kafkaTemplate, RoutingKafkaTemplate routingKafkaTemplate,
+                       KafkaTemplate<String, Message> userKafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+        this.routingKafkaTemplate = routingKafkaTemplate;
+        this.userKafkaTemplate = userKafkaTemplate;
+    }
 
-	void sendMessage(String message, String topicName) {
-		LOG.info("Sending : {}", message);
-		LOG.info("--------------------------------");
+    void sendMessage(String message, String topicName) {
+        LOG.info("Sending : {}", message);
+        LOG.info("--------------------------------");
 
-		kafkaTemplate.send(topicName, message);
-	}
+        kafkaTemplate.send(topicName, message);
+    }
 
-//	void sendWithRoutingTemplate(String message, String topicName) {
+    //	void sendWithRoutingTemplate(String message, String topicName) {
 //		LOG.info("Sending : {}", message);
 //		LOG.info("--------------------------------");
 //
 //		routingKafkaTemplate.send(topicName, message.getBytes());
 //	}
 //
-	public void sendCustomMessage(Message message, String topicName) {
-		LOG.info("Sending Json Serializer : {}", message);
-		LOG.info("--------------------------------");
+    public void sendCustomMessage(Message message, String topicName) {
+        LOG.info("Sending Json Serializer : {}", message);
+        LOG.info("--------------------------------");
 
-		userKafkaTemplate.send(topicName, message);
-	}
+        userKafkaTemplate.send(topicName, message);
+    }
 
 //	void sendMessageWithCallback(String message, String topicName) {
 //		LOG.info("Sending : {}", message);
