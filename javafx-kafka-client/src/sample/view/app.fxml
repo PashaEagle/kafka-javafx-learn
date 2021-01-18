@@ -28,11 +28,11 @@
                     </font>
                 </Label>
             <ListView fx:id="chatsListView" layoutX="27.0" layoutY="109.0" prefHeight="493.0" prefWidth="176.0" />
-            <TextArea fx:id="chatArea" layoutX="203.0" layoutY="109.0" prefHeight="493.0" prefWidth="313.0">
+            <TextArea fx:id="chatArea" editable="false" layoutX="203.0" layoutY="109.0" prefHeight="493.0" prefWidth="313.0">
                <font>
                   <Font name="Baloo Regular" size="13.0" />
                </font></TextArea>
-            <Button fx:id="newMessageButton" layoutX="542.0" layoutY="337.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="228.0" style="-fx-background-color: #F39c63 #F39c63;" text="New message" textFill="WHITE">
+            <Button fx:id="newMessageButton" layoutX="542.0" layoutY="337.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="228.0" style="-fx-background-color: #F39c63 #F39c63;" text="Send message" textFill="WHITE">
                <font>
                   <Font name="Baloo Regular" size="28.0" />
                </font>

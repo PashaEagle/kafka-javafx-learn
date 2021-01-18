@@ -1,5 +1,6 @@
 package sample.data;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.stage.Stage;
 import sample.dto.Message;
 
@@ -14,6 +15,7 @@ public class Context {
     public String loggedUsername;
     public String selectedChatUsername;
     public Map<String, List<Message>> usernameToMessagesMap;
+    public ObjectMapper mapper = new ObjectMapper();
 
     private Context() {
         usernameToMessagesMap = new HashMap<>();

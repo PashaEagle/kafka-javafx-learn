@@ -31,13 +31,8 @@ import sample.dto.Message;
 public class Controller {
 
     private final HttpClient client = HttpClient.newHttpClient();
+
     private Context context;
-
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
 
     @FXML
     private Button loginButton;
