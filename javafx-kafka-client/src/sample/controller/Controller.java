@@ -25,12 +25,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import sample.data.Context;
 import sample.dto.Message;
 
 public class Controller {
 
     private final HttpClient client = HttpClient.newHttpClient();
-    private Map<String, List<Message>> usernameToMessagesMap;
+    private Context context;
 
     @FXML
     private ResourceBundle resources;
@@ -45,22 +46,14 @@ public class Controller {
     private TextField usernameField;
 
     @FXML
-    private Button logoutButton;
-
-    @FXML
-    private ListView<?> chatsListView;
-
-    @FXML
-    private Label welcomeLabel;
-
-    @FXML
     void initialize() {
-        usernameToMessagesMap = new HashMap<>();
+        context = Context.getInstance();
         loginButton.setOnAction(this::onLoginButtonClick);
     }
 
     private void onLoginButtonClick(ActionEvent actionEvent) {
         System.out.println(usernameField.getText());
+        context.loggedUsername = usernameField.getText();
         HttpRequest request = null;
         HttpResponse<String> response = null;
         try {
@@ -78,26 +71,19 @@ public class Controller {
             Map<String, List<Message>> map = mapper.readValue(response.body(), new TypeReference<Map<String, List<Message>>>() {
             });
             System.out.println(map);
-
-            loginButton.getScene().getWindow().hide();
-
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/sample/view/app.fxml"));
-            loader.load();
-
-            Parent root = loader.getRoot();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.showAndWait();
-            logoutButton.setText("23");
-            welcomeLabel.setText("ssdfsd");
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+            context.usernameToMessagesMap = map;
+            openMainAppView();
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void openMainAppView() throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/sample/view/app.fxml"));
+        loader.load();
+        Parent root = loader.getRoot();
+        context.primaryStage.setScene(new Scene(root, 800, 800));
+        context.primaryStage.show();
     }
 }
