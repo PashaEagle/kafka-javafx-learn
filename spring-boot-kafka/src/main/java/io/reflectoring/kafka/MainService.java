@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,9 @@ public class MainService {
     public Map<String, List<Message>> getAllUserMessages(String username) {
         List<String> chatters = usernameToChattersMap.get(username);
         Map<String, List<Message>> chatterToMessagesMap = new HashMap<>();
+        if (chatters == null) {
+            chatters = new ArrayList<>();
+        }
         chatters.forEach(chatter -> {
             ChatId tempChat = new ChatId(username, chatter);
             List<Message> messagesWithChatter = chatIdToMessagesMap.get(tempChat);
