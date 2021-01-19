@@ -24,6 +24,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -50,6 +51,12 @@ public class AppController {
     private TextArea newMessageField;
 
     @FXML
+    private TextField customRecipientField;
+
+    @FXML
+    private Button addContactButton;
+
+    @FXML
     private Label welcomeLabel;
 
     @FXML
@@ -58,17 +65,22 @@ public class AppController {
         welcomeLabel.setText("Welcome, " + context.loggedUsername);
         logoutButton.setOnAction(this::onLogoutButtonClick);
         newMessageButton.setOnAction(this::onNewMessageButtonClick);
+        addContactButton.setOnAction(this::onAddContactButtonClick);
 
-        context.usernameToMessagesMap.keySet().forEach(username -> chatsListView.getItems().add(username));
+        renderChatListView();
 
         chatsListView.setOnMouseClicked(actionEvent -> renderChats());
 
         Timeline fiveSecondsWonder = new Timeline(
                 new KeyFrame(javafx.util.Duration.seconds(1),
-                        actionEvent -> renderChats()
-                ));
+                        actionEvent -> renderChats()));
         fiveSecondsWonder.setCycleCount(Timeline.INDEFINITE);
         fiveSecondsWonder.play();
+    }
+
+    private void renderChatListView() {
+        chatsListView.getItems().clear();
+        context.usernameToMessagesMap.keySet().forEach(username -> chatsListView.getItems().add(username));
     }
 
     private void renderChats() {
@@ -77,6 +89,7 @@ public class AppController {
         if (context.selectedChatUsername.length() > 0) {
             chatArea.clear();
             List<Message> messages = context.usernameToMessagesMap.get(context.selectedChatUsername);
+            if (messages == null) messages = new ArrayList<>();
             messages.forEach(message -> {
                 String sender = message.getFrom().equals(context.loggedUsername) ? "you" : message.getFrom();
                 String formattedTime = new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date(message.getTimestamp()));
@@ -136,6 +149,12 @@ public class AppController {
         Parent root = loader.getRoot();
         context.primaryStage.setScene(new Scene(root, 800, 500));
         context.primaryStage.show();
+    }
+
+    private void onAddContactButtonClick(ActionEvent actionEvent) {
+        if (customRecipientField.getText().isEmpty()) return;
+        chatsListView.getItems().add(customRecipientField.getText());
+        customRecipientField.clear();
     }
 }
 

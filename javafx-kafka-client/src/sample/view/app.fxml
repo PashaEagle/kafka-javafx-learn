@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -36,6 +37,16 @@
                         <Font name="Baloo Regular" size="28.0" />
                     </font>
                 </Button>
+            <TextField fx:id="customRecipientField" layoutX="27.0" layoutY="59.0" prefHeight="40.0" prefWidth="131.0" promptText="Custom contact">
+               <font>
+                  <Font name="Baloo Regular" size="15.0" />
+               </font>
+            </TextField>
+            <Button fx:id="addContactButton" layoutX="167.0" layoutY="62.0" mnemonicParsing="false" prefHeight="12.0" prefWidth="36.0" style="-fx-background-color: #F39c63 #F39c63;" text="+" textFill="WHITE">
+               <font>
+                  <Font name="Baloo Regular" size="14.0" />
+               </font>
+            </Button>
             </children>
         </AnchorPane>
         <Label fx:id="welcomeLabel" layoutX="121.0" layoutY="33.0" prefHeight="101.0" prefWidth="538.0" text="Welcome, man" textFill="WHITE">
