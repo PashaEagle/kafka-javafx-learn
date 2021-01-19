@@ -29,7 +29,8 @@ public class UserController {
     }
 
     @GetMapping("/messages/{username}")
-    Map<String, List<Message>> getUserMessages(@PathVariable String username) {
+    Map<String, List<Message>> getUserMessages(@PathVariable String username, @RequestParam Integer clientPort) {
+        service.addLoggedClient(username, clientPort);
         return service.getAllUserMessages(username);
     }
 }

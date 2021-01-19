@@ -2,7 +2,10 @@ package sample.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -59,24 +62,31 @@ public class AppController {
         logoutButton.setOnAction(this::onLogoutButtonClick);
         newMessageButton.setOnAction(this::onNewMessageButtonClick);
 
-        context.usernameToMessagesMap.keySet().forEach(username -> {
-            chatsListView.getItems().add(username);
-        });
+        context.usernameToMessagesMap.keySet().forEach(username -> chatsListView.getItems().add(username));
 
-        chatsListView.setOnMouseClicked(actionEvent -> {
-            context.selectedChatUsername = chatsListView.getItems().get(chatsListView.getSelectionModel().getSelectedIndices().get(0));
-            if (context.selectedChatUsername.length() > 0) {
-                chatArea.clear();
-                List<Message> messages = context.usernameToMessagesMap.get(context.selectedChatUsername);
-                messages.forEach(message -> {
-                    String sender = message.getFrom().equals(context.loggedUsername) ? "you" : message.getFrom();
-                    String formattedTime = new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date(message.getTimestamp()));
-                    chatArea.appendText("[" + formattedTime + "] " + sender + ":\n");
-                    chatArea.appendText(message.getText() + "\n\n");
-                });
+        chatsListView.setOnMouseClicked(actionEvent -> renderChats());
 
-            }
-        });
+        Timeline fiveSecondsWonder = new Timeline(
+                new KeyFrame(javafx.util.Duration.seconds(1),
+                        actionEvent -> renderChats()
+                ));
+        fiveSecondsWonder.setCycleCount(Timeline.INDEFINITE);
+        fiveSecondsWonder.play();
+    }
+
+    private void renderChats() {
+        if (chatsListView.getSelectionModel().getSelectedIndices().isEmpty()) return;
+        context.selectedChatUsername = chatsListView.getItems().get(chatsListView.getSelectionModel().getSelectedIndices().get(0));
+        if (context.selectedChatUsername.length() > 0) {
+            chatArea.clear();
+            List<Message> messages = context.usernameToMessagesMap.get(context.selectedChatUsername);
+            messages.forEach(message -> {
+                String sender = message.getFrom().equals(context.loggedUsername) ? "you" : message.getFrom();
+                String formattedTime = new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date(message.getTimestamp()));
+                chatArea.appendText("[" + formattedTime + "] " + sender + ":\n");
+                chatArea.appendText(message.getText() + "\n\n");
+            });
+        }
     }
 
     private void onLogoutButtonClick(ActionEvent actionEvent) {

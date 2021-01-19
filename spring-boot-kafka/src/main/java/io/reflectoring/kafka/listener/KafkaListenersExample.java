@@ -1,20 +1,24 @@
 package io.reflectoring.kafka.listener;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.reflectoring.kafka.MainService;
 import io.reflectoring.kafka.dto.ChatId;
 import io.reflectoring.kafka.dto.Message;
 import io.reflectoring.kafka.dto.SendMessageRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.PartitionOffset;
 import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class KafkaListenersExample {
@@ -26,6 +30,12 @@ public class KafkaListenersExample {
 
     @Autowired
     private Map<String, List<String>> usernameToChattersMap;
+
+    @Autowired
+    private Map<String, List<Integer>> loggedUsernameToClientPorts;
+
+    @Autowired
+    private MainService mainService;
 
     //	@KafkaListener(topics = "reflectoring-1")
 //    @KafkaListener(id = "thing2")
@@ -74,6 +84,48 @@ public class KafkaListenersExample {
         LOG.info(chatIdToMessagesMap.toString());
         createNewChatIfNotPresent(message.getFrom(), message.getTo());
         LOG.info("Successfully added new message");
+        List<Integer> clientPortsForFrom = loggedUsernameToClientPorts.get(message.getFrom());
+        if (clientPortsForFrom == null) clientPortsForFrom = Collections.emptyList();
+        List<Integer> clientPortsForTo = loggedUsernameToClientPorts.get(message.getTo());
+        if (clientPortsForTo == null) clientPortsForTo = Collections.emptyList();
+        clientPortsForFrom.forEach(port -> {
+            Map<String, List<Message>> userMessages = mainService.getAllUserMessages(message.getFrom());
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            String body;
+            try {
+                body = new ObjectMapper().writeValueAsString(userMessages);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                return;
+            }
+            HttpEntity<String> request =
+                    new HttpEntity<String>(body, headers);
+
+            String personResultAsJsonStr =
+                    restTemplate.postForObject("http://localhost:" + port + "/test", request, String.class);
+        });
+
+        clientPortsForTo.forEach(port -> {
+            Map<String, List<Message>> userMessages = mainService.getAllUserMessages(message.getTo());
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            String body;
+            try {
+                body = new ObjectMapper().writeValueAsString(userMessages);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                return;
+            }
+            HttpEntity<String> request =
+                    new HttpEntity<String>(body, headers);
+
+            String personResultAsJsonStr =
+                    restTemplate.postForObject("http://localhost:" + port + "/test", request, String.class);
+        });
+
     }
 
     void createNewChatIfNotPresent(String username1, String username2) {

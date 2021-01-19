@@ -53,7 +53,7 @@ public class Controller {
         HttpResponse<String> response = null;
         try {
             request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/api/messages/" + usernameField.getText()))
+                    .uri(URI.create("http://localhost:8080/api/messages/" + usernameField.getText() + "?clientPort=" + context.httpPort))
                     .timeout(Duration.ofMinutes(1))
                     .header("Content-Type", "application/json")
                     .GET()

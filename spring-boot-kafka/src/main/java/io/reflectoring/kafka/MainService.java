@@ -29,6 +29,8 @@ public class MainService {
     private Map<ChatId, List<Message>> chatIdToMessagesMap;
     @Autowired
     private Map<String, List<String>> usernameToChattersMap;
+    @Autowired
+    private Map<String, List<Integer>> loggedUsernameToClientPorts;
 
     public Message sendMessage(SendMessageRequest sendMessageRequest) {
         Message message = Message.fromRequest(sendMessageRequest);
@@ -49,5 +51,16 @@ public class MainService {
             chatterToMessagesMap.put(chatter, messagesWithChatter);
         });
         return chatterToMessagesMap;
+    }
+
+    public void addLoggedClient(String username, Integer clientPort) {
+        List<Integer> clientPorts = loggedUsernameToClientPorts.get(username);
+        if (clientPorts == null) clientPorts = new ArrayList<>();
+        boolean alreadyPresent = clientPorts.stream().anyMatch(port -> port.equals(clientPort));
+        if (!alreadyPresent) {
+            clientPorts.add(clientPort);
+            loggedUsernameToClientPorts.put(username, clientPorts);
+        }
+        System.out.println("Now client map: " + loggedUsernameToClientPorts);
     }
 }

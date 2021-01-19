@@ -21,4 +21,9 @@ public class MessagesDataConfig {
     public Map<String, List<String>> usernameToChattersMap() {
         return new HashMap<>();
     }
+
+    @Bean
+    public Map<String, List<Integer>> loggedUsernameToClientPorts() {
+        return new HashMap<>();
+    }
 }

@@ -12,6 +12,7 @@ public class Context {
     private final static Context instance = new Context();
 
     public Stage primaryStage;
+    public Integer httpPort;
     public String loggedUsername;
     public String selectedChatUsername;
     public Map<String, List<Message>> usernameToMessagesMap;
