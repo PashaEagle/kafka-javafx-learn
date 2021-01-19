@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.PartitionOffset;
 import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.stereotype.Component;
@@ -21,9 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class KafkaListener {
+public class KafkaListenerWorker {
 
-    private final Logger LOG = LoggerFactory.getLogger(KafkaListener.class);
+    private final Logger LOG = LoggerFactory.getLogger(KafkaListenerWorker.class);
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
@@ -48,7 +49,6 @@ public class KafkaListener {
         messages.add(message);
         chatIdToMessagesMap.put(chatId, messages);
         createNewChatIfNotPresent(message.getFrom(), message.getTo());
-        LOG.info("Successfully added new message");
 
         List<Integer> clientPortsForFrom = loggedUsernameToClientPorts.get(message.getFrom());
         if (clientPortsForFrom == null) clientPortsForFrom = Collections.emptyList();
