@@ -1,7 +1,5 @@
 package io.reflectoring.kafka.dto;
 
-import org.apache.kafka.common.network.Send;
-
 public class Message {
 
     private String from;

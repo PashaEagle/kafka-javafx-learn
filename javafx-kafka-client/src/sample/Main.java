@@ -19,7 +19,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("view/login.fxml"));
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("Kafka JavaFX client");
         primaryStage.setScene(new Scene(root, 800, 500));
         primaryStage.show();
         context.primaryStage = primaryStage;
@@ -30,7 +30,7 @@ public class Main extends Application {
         Context context = Context.getInstance();
         context.httpPort = Integer.parseInt(args[0]);
         HttpServer server = HttpServer.create(new InetSocketAddress(context.httpPort), 0);
-        server.createContext("/test", new UpdateHandler());
+        server.createContext("/update", new UpdateHandler());
         server.setExecutor(null);
         server.start();
 

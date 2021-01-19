@@ -3,9 +3,9 @@ package io.reflectoring.kafka;
 import io.reflectoring.kafka.dto.ChatId;
 import io.reflectoring.kafka.dto.Message;
 import io.reflectoring.kafka.dto.SendMessageRequest;
-import io.reflectoring.kafka.sender.KafkaSenderExample;
-import io.reflectoring.kafka.sender.KafkaSenderWithMessageConverter;
-import org.apache.kafka.common.network.Send;
+import io.reflectoring.kafka.sender.KafkaSender;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,13 +18,13 @@ import java.util.Map;
 @Service
 public class MainService {
 
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
+
     @Value("${io.reflectoring.kafka.topic-1}")
     private String topic1;
 
     @Autowired
-    private KafkaSenderExample kafkaSenderExample;
-    @Autowired
-    private KafkaSenderWithMessageConverter messageConverterSender;
+    private KafkaSender kafkaSender;
     @Autowired
     private Map<ChatId, List<Message>> chatIdToMessagesMap;
     @Autowired
@@ -35,7 +35,7 @@ public class MainService {
     public Message sendMessage(SendMessageRequest sendMessageRequest) {
         Message message = Message.fromRequest(sendMessageRequest);
         message.setTimestamp(System.currentTimeMillis());
-        kafkaSenderExample.sendCustomMessage(message, topic1);
+        kafkaSender.sendCustomMessage(message, topic1);
         return message;
     }
 
@@ -61,7 +61,7 @@ public class MainService {
             clientPorts.add(clientPort);
             loggedUsernameToClientPorts.put(username, clientPorts);
         }
-        System.out.println("Now client map: " + loggedUsernameToClientPorts);
+        LOG.info("Current active client map: {}", loggedUsernameToClientPorts);
     }
 
     public void logoutClient(String username, Integer port) {
@@ -71,6 +71,6 @@ public class MainService {
             loggedUsernameToClientPorts.put(username, clientPorts);
         else
             loggedUsernameToClientPorts.remove(username);
-        System.out.println("Client with username=" + username + " on port=" + port + " successfully logged out");
+        LOG.info("Client with username={} on port={} successfully logged out", username, port);
     }
 }
