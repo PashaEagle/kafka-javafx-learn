@@ -38,9 +38,6 @@ public class AppController {
     private Button logoutButton;
 
     @FXML
-    private TextField newMessageRecipient;
-
-    @FXML
     private ListView<String> chatsListView;
 
     @FXML
@@ -87,18 +84,32 @@ public class AppController {
                 chatArea.appendText(message.getText() + "\n\n");
             });
         }
+        newMessageButton.setDisable(false);
+        newMessageButton.setText("Send message");
     }
 
     private void onLogoutButtonClick(ActionEvent actionEvent) {
         try {
+            HttpRequest request = null;
+            HttpResponse<String> response = null;
+            request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8080/api/logout?username=" + context.loggedUsername + "&port=" + context.httpPort))
+                    .timeout(Duration.ofMinutes(1))
+                    .header("Content-Type", "application/json")
+                    .DELETE()
+                    .build();
+            response =
+                    client.send(request, HttpResponse.BodyHandlers.ofString());
             openLoginView();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void onNewMessageButtonClick(ActionEvent actionEvent) {
-        SendMessageRequest sendMessageRequest = new SendMessageRequest(context.loggedUsername, newMessageRecipient.getText(), newMessageField.getText());
+        newMessageButton.setDisable(true);
+        newMessageButton.setText("Sending..");
+        SendMessageRequest sendMessageRequest = new SendMessageRequest(context.loggedUsername, context.selectedChatUsername, newMessageField.getText());
         HttpRequest request = null;
         HttpResponse<String> response = null;
         try {
@@ -115,6 +126,7 @@ public class AppController {
         } catch (Exception e) {
             System.err.println("erorr");
         }
+        newMessageField.clear();
     }
 
     private void openLoginView() throws IOException {

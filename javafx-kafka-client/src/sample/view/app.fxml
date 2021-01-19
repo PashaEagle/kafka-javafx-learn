@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -12,36 +11,31 @@
     <children>
         <AnchorPane layoutY="164.0" prefHeight="637.0" prefWidth="800.0" style="-fx-background-color: #FAFAFA;">
             <children>
-                <Button fx:id="logoutButton" layoutX="538.0" layoutY="534.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="228.0" style="-fx-background-color: #e65120;" text="Log out" textFill="WHITE">
-                    <font>
-                        <Font name="Baloo Regular" size="28.0" />
-                    </font>
-                </Button>
-                <TextField fx:id="newMessageRecipient" alignment="CENTER" layoutX="538.0" layoutY="109.0" prefHeight="59.0" prefWidth="234.0" promptText="recipient" style="-fx-background-color: #FAFAFA #FAFAFA; -fx-border-color: silver; -fx-border-radius: 7;">
-                    <font>
-                        <Font name="Baloo Regular" size="24.0" />
-                    </font>
-                </TextField>
                 <Label layoutX="300.0" layoutY="8.0" prefHeight="101.0" prefWidth="201.0" text="Your chats" textFill="#686868">
                     <font>
                         <Font name="Baloo Regular" size="40.0" />
                     </font>
                 </Label>
             <ListView fx:id="chatsListView" layoutX="27.0" layoutY="109.0" prefHeight="493.0" prefWidth="176.0" />
-            <TextArea fx:id="chatArea" editable="false" layoutX="203.0" layoutY="109.0" prefHeight="493.0" prefWidth="313.0">
+            <TextArea fx:id="chatArea" editable="false" layoutX="203.0" layoutY="109.0" prefHeight="446.0" prefWidth="332.0">
                <font>
                   <Font name="Baloo Regular" size="13.0" />
                </font></TextArea>
-            <Button fx:id="newMessageButton" layoutX="542.0" layoutY="337.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="228.0" style="-fx-background-color: #F39c63 #F39c63;" text="Send message" textFill="WHITE">
+            <Button fx:id="newMessageButton" defaultButton="true" disable="true" layoutX="417.0" layoutY="555.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="118.0" style="-fx-background-color: #F39c63 #F39c63;" text="Send message" textFill="WHITE">
                <font>
-                  <Font name="Baloo Regular" size="28.0" />
+                  <Font name="Baloo Regular" size="14.0" />
                </font>
             </Button>
-            <TextArea fx:id="newMessageField" layoutX="542.0" layoutY="179.0" prefHeight="144.0" prefWidth="228.0" promptText="Write a message...">
+            <TextArea fx:id="newMessageField" layoutX="203.0" layoutY="554.0" prefHeight="48.0" prefWidth="213.0" promptText="Write a message...">
                <font>
                   <Font name="Baloo Regular" size="13.0" />
                </font>
             </TextArea>
+                <Button fx:id="logoutButton" layoutX="558.0" layoutY="533.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="228.0" style="-fx-background-color: #e65120;" text="Log out" textFill="WHITE">
+                    <font>
+                        <Font name="Baloo Regular" size="28.0" />
+                    </font>
+                </Button>
             </children>
         </AnchorPane>
         <Label fx:id="welcomeLabel" layoutX="121.0" layoutY="33.0" prefHeight="101.0" prefWidth="538.0" text="Welcome, man" textFill="WHITE">

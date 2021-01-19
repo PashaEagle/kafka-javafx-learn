@@ -33,4 +33,9 @@ public class UserController {
         service.addLoggedClient(username, clientPort);
         return service.getAllUserMessages(username);
     }
+
+    @DeleteMapping("/logout")
+    void logoutClient(@RequestParam String username, @RequestParam Integer port) {
+        service.logoutClient(username, port);
+    }
 }

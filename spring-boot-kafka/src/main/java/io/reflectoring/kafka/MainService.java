@@ -63,4 +63,14 @@ public class MainService {
         }
         System.out.println("Now client map: " + loggedUsernameToClientPorts);
     }
+
+    public void logoutClient(String username, Integer port) {
+        List<Integer> clientPorts = loggedUsernameToClientPorts.get(username);
+        clientPorts.remove(port);
+        if (!clientPorts.isEmpty())
+            loggedUsernameToClientPorts.put(username, clientPorts);
+        else
+            loggedUsernameToClientPorts.remove(username);
+        System.out.println("Client with username=" + username + " on port=" + port + " successfully logged out");
+    }
 }
