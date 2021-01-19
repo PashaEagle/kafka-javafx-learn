@@ -30,20 +30,24 @@ import sample.dto.Message;
 
 public class Controller {
 
+    private final Context context = Context.getInstance();
     private final HttpClient client = HttpClient.newHttpClient();
-
-    private Context context;
 
     @FXML
     private Button loginButton;
-
+    @FXML
+    private Button exitButton;
     @FXML
     private TextField usernameField;
 
     @FXML
     void initialize() {
-        context = Context.getInstance();
         loginButton.setOnAction(this::onLoginButtonClick);
+        exitButton.setOnAction(this::onExitButtonClick);
+    }
+
+    private void onExitButtonClick(ActionEvent actionEvent) {
+        System.exit(0);
     }
 
     private void onLoginButtonClick(ActionEvent actionEvent) {
