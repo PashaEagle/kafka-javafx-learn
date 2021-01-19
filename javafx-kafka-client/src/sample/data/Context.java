@@ -11,12 +11,13 @@ import java.util.Map;
 public class Context {
     private final static Context instance = new Context();
 
-    public Stage primaryStage;
+    public final ObjectMapper mapper = new ObjectMapper();
+
     public Integer httpPort;
+    public Stage primaryStage;
     public String loggedUsername;
     public String selectedChatUsername;
     public Map<String, List<Message>> usernameToMessagesMap;
-    public ObjectMapper mapper = new ObjectMapper();
 
     private Context() {
         usernameToMessagesMap = new HashMap<>();

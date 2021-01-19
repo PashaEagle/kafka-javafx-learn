@@ -1,7 +1,5 @@
 package sample;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,10 +9,8 @@ import javafx.stage.Stage;
 import sample.data.Context;
 import sample.handler.UpdateHandler;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
 
 public class Main extends Application {
 
@@ -35,8 +31,9 @@ public class Main extends Application {
         context.httpPort = Integer.parseInt(args[0]);
         HttpServer server = HttpServer.create(new InetSocketAddress(context.httpPort), 0);
         server.createContext("/test", new UpdateHandler());
-        server.setExecutor(null); // creates a default executor
+        server.setExecutor(null);
         server.start();
+
         launch(args);
     }
 }

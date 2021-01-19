@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class UpdateHandler implements HttpHandler {
 
-    private Context context = Context.getInstance();
+    private final Context context = Context.getInstance();
 
     @Override
     public void handle(HttpExchange t) throws IOException {
