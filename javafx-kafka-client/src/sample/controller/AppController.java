@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import sample.data.Context;
 import sample.dto.Message;
 import sample.dto.SendMessageRequest;
+import sample.utils.UrlGenerator;
 
 import java.io.IOException;
 import java.net.URI;
@@ -85,7 +86,7 @@ public class AppController {
     private void onLogoutButtonClick(ActionEvent actionEvent) {
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/api/logout?username=" + context.loggedUsername + "&port=" + context.httpPort))
+                    .uri(UrlGenerator.getLogoutUrl(context.loggedUsername, context.httpPort))
                     .timeout(Duration.ofMinutes(1))
                     .header("Content-Type", "application/json")
                     .DELETE()
@@ -110,7 +111,7 @@ public class AppController {
         SendMessageRequest sendMessageRequest = new SendMessageRequest(context.loggedUsername, context.selectedChatUsername, newMessageField.getText());
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/api/send/"))
+                    .uri(UrlGenerator.getSendMessageUrl())
                     .timeout(Duration.ofMinutes(1))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(context.mapper.writeValueAsString(sendMessageRequest)))

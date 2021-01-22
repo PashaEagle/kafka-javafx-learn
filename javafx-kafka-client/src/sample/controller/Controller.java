@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import sample.data.Context;
 import sample.dto.Message;
+import sample.utils.UrlGenerator;
 
 import java.io.IOException;
 import java.net.URI;
@@ -46,7 +47,7 @@ public class Controller {
         try {
             context.loggedUsername = usernameField.getText();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/api/messages/" + usernameField.getText() + "?clientPort=" + context.httpPort))
+                    .uri(UrlGenerator.getAllMessagesUrl(usernameField.getText(), context.httpPort))
                     .timeout(Duration.ofMinutes(1))
                     .header("Content-Type", "application/json")
                     .GET()

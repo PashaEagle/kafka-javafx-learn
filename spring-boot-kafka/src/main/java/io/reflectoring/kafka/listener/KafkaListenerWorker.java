@@ -7,6 +7,7 @@ import io.reflectoring.kafka.dto.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -27,6 +28,8 @@ public class KafkaListenerWorker {
     private final Logger LOG = LoggerFactory.getLogger(KafkaListenerWorker.class);
     private final RestTemplate restTemplate = new RestTemplate();
 
+    @Value("${client.webhook.url}")
+    private String clientWebhookUrl;
     @Autowired
     private Map<ChatId, List<Message>> chatIdToMessagesMap;
     @Autowired
@@ -71,7 +74,7 @@ public class KafkaListenerWorker {
             headers.setContentType(MediaType.APPLICATION_JSON);
             String body = new ObjectMapper().writeValueAsString(userMessages);
             HttpEntity<String> request = new HttpEntity<>(body, headers);
-            restTemplate.postForObject("http://localhost:" + port + "/update", request, String.class);
+            restTemplate.postForObject(String.format(clientWebhookUrl, port), request, String.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
