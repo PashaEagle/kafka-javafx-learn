@@ -32,6 +32,46 @@ public class MainService {
     @Autowired
     private Map<String, List<Integer>> loggedUsernameToClientPorts;
 
+    public String getTopic1() {
+        return topic1;
+    }
+
+    public void setTopic1(String topic1) {
+        this.topic1 = topic1;
+    }
+
+    public KafkaSender getKafkaSender() {
+        return kafkaSender;
+    }
+
+    public void setKafkaSender(KafkaSender kafkaSender) {
+        this.kafkaSender = kafkaSender;
+    }
+
+    public Map<ChatId, List<Message>> getChatIdToMessagesMap() {
+        return chatIdToMessagesMap;
+    }
+
+    public void setChatIdToMessagesMap(Map<ChatId, List<Message>> chatIdToMessagesMap) {
+        this.chatIdToMessagesMap = chatIdToMessagesMap;
+    }
+
+    public Map<String, List<String>> getUsernameToChattersMap() {
+        return usernameToChattersMap;
+    }
+
+    public void setUsernameToChattersMap(Map<String, List<String>> usernameToChattersMap) {
+        this.usernameToChattersMap = usernameToChattersMap;
+    }
+
+    public Map<String, List<Integer>> getLoggedUsernameToClientPorts() {
+        return loggedUsernameToClientPorts;
+    }
+
+    public void setLoggedUsernameToClientPorts(Map<String, List<Integer>> loggedUsernameToClientPorts) {
+        this.loggedUsernameToClientPorts = loggedUsernameToClientPorts;
+    }
+
     public Message sendMessage(SendMessageRequest sendMessageRequest) {
         Message message = Message.fromRequest(sendMessageRequest);
         message.setTimestamp(System.currentTimeMillis());
@@ -73,4 +113,5 @@ public class MainService {
             loggedUsernameToClientPorts.remove(username);
         LOG.info("Client with username={} on port={} successfully logged out", username, port);
     }
+
 }
